@@ -10,6 +10,7 @@
 #include <signal.h>
 #include <sys/msg.h>
 #include <fcntl.h>
+#include <stdarg.h> 
 
 int shm_key;
 int shm_id;

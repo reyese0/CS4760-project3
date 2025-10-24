@@ -8,7 +8,7 @@
 #include <sys/msg.h>
 #include <unistd.h>
 #include <sys/shm.h>
-#include <stdarg.h> 
+
 
 int shm_key;
 int shm_id;
