@@ -38,6 +38,7 @@ typedef struct {
 
 PCB processTable[20];
 int nextChildIndex = 0;
+FILE *log_fp;
 
 void print_help() {
     printf("How to use: oss [-h] [-n proc] [-s simul] [-t timelimitForChildren] [-i intervalInMsToLaunchChildren] [-f logfile]\n");
@@ -85,13 +86,27 @@ int findNextChildToMessage() {
     return -1;
 }
 
+// Signal handler for alarm
+void signal_handler(int sig) {
+    printf("\nReceived SIGALRM (60 second timeout). Cleaning up...\n");
+    
+    // Send kill signal to all children based on their PIDs in process table
+    for (int i = 0; i < 20; i++) {
+        if (processTable[i].occupied && processTable[i].pid > 0) {
+            printf("Killing child process %d\n", processTable[i].pid);
+            kill(processTable[i].pid, SIGTERM);
+        }
+    }
+    printf("OSS terminated due to 60 second timeout\n");
+    exit(1);
+}
+
 int main(int argc, char *argv[]) { 
     int totalChildren = 0;
     int maxSimul = 0;
     float timeBound = 0.0;
     float launchInterval = 0.0;
     char logfile[100] = "oss.log";
-    FILE *log_fp;
 
     char opt;
     const char optstring[] = "hn:s:t:i:f:";
@@ -103,6 +118,10 @@ int main(int argc, char *argv[]) {
     int childrenLaunched = 0;
     int childrenTerminated = 0;
     int total_messages_sent = 0;
+
+    // Turn on alarm handler
+    signal(SIGALRM, signal_handler);
+    alarm(60);
 
     while ((opt = getopt(argc, argv, optstring)) != -1) {
         switch (opt) {
