@@ -23,7 +23,7 @@ typedef struct msgbuffer {
     long mtype;     //message type (1 for oss->worker, 2 for worker->oss)
     char strData[100];
     pid_t pid;           
-    int done;            //1 if worker is done, 0 otherwise
+    int running;            //1 if worker is done, 0 otherwise
     int messagesReceived; 
 } msgbuffer;
 
@@ -134,7 +134,7 @@ int main(int argc, char *argv[]) {
     }
 
     //checks for required parameters
-    if (maxSimul <= 0 || timeBound <= 0 || interval <= 0) {
+    if (maxSimul <= 0 || timeBound <= 0 || launchInterval <= 0) {
         fprintf(stderr, "Invalid parameters: maxSimul, timeBound, and interval must be positive\n");
         print_help();
         exit(1);
@@ -269,7 +269,7 @@ int main(int argc, char *argv[]) {
                                       (clock->nanoseconds - lastLaunchNano);
             long intervalNano = (long)(launchInterval * 1000000000L);
             
-            if (currentChildren < maxSimultaneous && timeSinceLastLaunch >= intervalNano) {
+            if (currentChildren < maxSimul && timeSinceLastLaunch >= intervalNano) {
                 //launchWorker
                 // Find empty slot in process table
                 int slot = -1;
