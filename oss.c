@@ -111,7 +111,6 @@ int main(int argc, char *argv[]) {
     char opt;
     const char optstring[] = "hn:s:t:i:f:";
 
-    msgbuffer buf;
     int msqid = 0;
     key_t key;
 
@@ -312,11 +311,6 @@ int main(int argc, char *argv[]) {
                         slot = i;
                         break;
                     }
-                }
-                
-                if (slot == -1) {
-                    log_message("OSS: No available slots in process table!\n");
-                    return;
                 }
                 
                 // Generate random duration for worker (1 to timeBound seconds)
