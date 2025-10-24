@@ -49,6 +49,21 @@ void print_help() {
     printf("  -f logfile name to output to\n");
 }
 
+void log_message(const char *format, ...) {
+    va_list args;
+    va_list args2;
+    
+    // Print to log file
+    va_start(args, format);
+    vfprintf(log_fp, format, args);
+    va_end(args);
+    
+    // Print to screen
+    va_start(args2, format);
+    vprintf(format, args2);
+    va_end(args2);
+}
+
 int getActiveChildrenCount() {
     int count = 0;
     for (int i = 0; i < 20; i++) {
