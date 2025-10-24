@@ -125,8 +125,8 @@ int main(int argc, char *argv[]) {
     } while (!done);
 
     // Get final system time
-    currSec = clock->seconds;
-    currNano = clock->nanoseconds;
+    int currSec = clock->seconds;
+    int currNano = clock->nanoseconds;
 
     // Final termination message
     printf("WORKER PID:%d PPID:%d SysClockS: %d SysclockNano: %d\n", pid, ppid, currSec, currNano);
